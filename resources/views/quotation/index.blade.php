@@ -1,8 +1,8 @@
 @extends('dashboard')
-@section('title', 'customers')
+@section('title', 'quotations')
 @section('content')
     <index
-        :items="{{ $customers }}"
+        :items="{{ $quotations }}"
         :columns="{{ $columns }}"
         add-route="customers.add"
 

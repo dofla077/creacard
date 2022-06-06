@@ -1,5 +1,7 @@
 import Vue from 'vue'
-import vuetify from 'vuetify'
+//import vuetify from 'vuetify'
+import Buefy from 'buefy'
+import 'buefy/dist/buefy.css'
 import Alpine from 'alpinejs'
 
 //import App from './App.vue'
@@ -19,7 +21,9 @@ Vue.mixin({
   },
 })
 
-Vue.use(vuetify)
+//Vue.use(vuetify)
+Vue.use(Buefy)
+
 
 /*new Vue({
   render: h => h(App),
@@ -28,7 +32,7 @@ Vue.use(vuetify)
 new Vue({
   el: '#app',
   // eslint-disable-next-line no-undef
-  vuetify: new vuetify(),
+  //vuetify: new vuetify(),
   data: {},
 })
 

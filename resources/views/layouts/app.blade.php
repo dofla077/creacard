@@ -32,6 +32,9 @@
             <main>
                 {{ $slot }}
             </main>
+
+            <!-- Full bundle -->
+            <script src="https://unpkg.com/buefy/dist/buefy.min.js"></script>
         </div>
     </body>
 </html>

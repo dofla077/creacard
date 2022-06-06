@@ -9,6 +9,8 @@ class Customer extends Model
 {
     use HasFactory;
 
+    public $guarded = [];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

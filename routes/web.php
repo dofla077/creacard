@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\QuotationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,8 +19,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::group(['middleware' => ['web', 'auth']], function () {
 Route::prefix('customers')->group(function () {
-    Route::get('/', [CustomerController::class, 'index'])->name('customer.index');
+    Route::get('/', [CustomerController::class, 'index'])->name('customers.index');
+    Route::get('add', [CustomerController::class, 'add'])->name('customers.add');
+    Route::post('/', [CustomerController::class, 'create'])->name('customers.create');
+
+    Route::resource('quotations', QuotationController::class);
+});
 });
 
 Route::get('/dashboard', function () {
