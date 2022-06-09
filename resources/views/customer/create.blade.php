@@ -1,8 +1,8 @@
 @extends('dashboard')
-@section('title', 'add customers')
+@section('subtitle', 'create customer')
 @section('content')
-    <create-customer
-        submit-action="customers.create"
+    <customer-form
+        submit-action="customers.store"
         redirect-url="customers.index"
-    ></create-customer>
+    ></customer-form>
 @endsection

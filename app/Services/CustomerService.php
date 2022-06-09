@@ -12,7 +12,7 @@ class CustomerService implements CustomersService
 {
     // customer columns
     const COLUMNS = [
-        ['field' => 'id', 'label' => 'ID', 'width' => 40, 'numeric' => true],
+        //['field' => 'id', 'label' => 'ID', 'width' => 40, 'numeric' => true],
         ['label' => 'Firstname', 'field' => 'firstname'],
         ['label' => 'Lastname', 'field' => 'lastname'],
         ['label' => 'Email', 'field' => 'email'],
@@ -26,24 +26,20 @@ class CustomerService implements CustomersService
     /**
      *  Get customers
      *
-     * @return Collection|array
      */
-    public function getCustomers(): Collection|array
+    public function getCustomers()
     {
-        $customers = Customer::withCount('quotations')->get(['id', 'firstname', 'lastname', 'email', 'phone', 'address', 'updated_at']);
+        return Customer::withCount('quotations')->paginate();
+    }
 
-        return [$customers->map(fn($item) => [
-            'id' => $item->id,
-            'firstname' => $item->firstname,
-            'lastname' => $item->lastname,
-            'email' => $item->email,
-            'phone' => $item->phone,
-            'address' => $item->address,
-            'quotations' => $item->quotations_count,
-            'updated_at' => $item->updated_at->format('Y-m-d'),
-        ]),
-            collect(static::COLUMNS),
-        ];
+    /**
+     * Get columns
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getColumns(): \Illuminate\Support\Collection
+    {
+        return collect(static::COLUMNS);
     }
 
     /**

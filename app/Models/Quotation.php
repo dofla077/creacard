@@ -3,12 +3,16 @@
 namespace App\Models;
 
 use App\Enums\QuotationState;
+use App\Observers\QuotationObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Quotation extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
+    protected $fillable = ['label', 'customer_id', 'number', 'state', 'price', 'description'];
 
     protected $casts = [
         'state' => QuotationState::class

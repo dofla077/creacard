@@ -2,34 +2,23 @@
   <section>
     <b-field grouped group-multiline>
       <b-button
-        label="Clear selected"
-        type="is-danger"
-        icon-left="close"
-        :disabled="!selected"
-        @click="selected = null"
-      />
-
-      <b-button
         label="Add customer"
         type="is-info"
         @click="addCustomerLink"
       />
     </b-field>
 
-    <b-tabs>
-      <b-tab-item label="Table">
-        <b-table
-          :data="items"
-          :columns="columns"
-          :selected.sync="selected"
-          focusable
-        />
-      </b-tab-item>
-
-      <b-tab-item label="Selected">
-        <pre>{{ selected }}</pre>
-      </b-tab-item>
-    </b-tabs>
+    <b-table
+      ref="table"
+      :data="items"
+      :columns="columns"
+    >
+      <b-table-column v-slot="props" field="label" label="Label" centered>
+        <span class="tag is-success">
+          {{ props.row.label }} toot
+        </span>
+      </b-table-column>
+    </b-table>
   </section>
 </template>
 <script>

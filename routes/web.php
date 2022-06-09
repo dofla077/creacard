@@ -20,17 +20,20 @@ Route::get('/', function () {
 });
 
 Route::group(['middleware' => ['web', 'auth']], function () {
-Route::prefix('customers')->group(function () {
-    Route::get('/', [CustomerController::class, 'index'])->name('customers.index');
-    Route::get('add', [CustomerController::class, 'add'])->name('customers.add');
-    Route::post('/', [CustomerController::class, 'create'])->name('customers.create');
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->middleware(['auth'])->name('dashboard');
 
-    Route::resource('quotations', QuotationController::class);
+    Route::prefix('customers')->group(function () {
+        Route::get('/', [CustomerController::class, 'index'])->name('customers.index');
+        Route::get('create', [CustomerController::class, 'create'])->name('customers.create');
+        Route::post('store', [CustomerController::class, 'store'])->name('customers.store');
+    });
+
+    Route::resource('quotations', QuotationController::class)->except(['show']);
+
 });
-});
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
 
-require __DIR__.'/auth.php';
+
+require __DIR__ . '/auth.php';

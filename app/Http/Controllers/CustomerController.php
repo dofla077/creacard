@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\CustomersService;
-use App\Contracts\QuotationsService;
-use App\Http\Requests\CreateCustomerRequest;
+use App\Http\Requests\Customer\PostCustomerRequest;
 
 class CustomerController extends Controller
 {
@@ -25,21 +24,22 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        list($customers, $columns) = $this->customerService->getCustomers();
+        $customers = $this->customerService->getCustomers();
+        $columns = $this->customerService->getColumns();
 
         return view('customer.index', compact('customers', 'columns'));
     }
 
     /**
-     * @param CreateCustomerRequest $request
+     * @param PostCustomerRequest $request
      * @return mixed
      */
-    public function create(CreateCustomerRequest $request)
+    public function store(PostCustomerRequest $request)
     {
         return $this->customerService->create($request->validated());
     }
 
-    public function add()
+    public function create()
     {
         return view('customer.create');
     }

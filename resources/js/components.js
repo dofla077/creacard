@@ -2,8 +2,10 @@ import Vue from 'vue'
 
 import AppIndex from './pages/App'
 import Index from './components/Index'
-import CreateCustomer from './pages/customer/CreateCustomer'
+import CustomerForm from './pages/customer/CustomerForm'
+import QuotationForm from './pages/quotation/QuotationForm'
 
 Vue.component('AppIndex', AppIndex)
 Vue.component('Index', Index)
-Vue.component('CreateCustomer', CreateCustomer)
+Vue.component('CustomerForm', CustomerForm)
+Vue.component('QuotationForm', QuotationForm)

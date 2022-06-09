@@ -9,9 +9,8 @@ interface QuotationsService
     /**
      * Get quotation
      *
-     * @return Collection|array
      */
-    public function getQuotations(): Collection|array;
+    public function getQuotations();
 
     /**
      * Create quotation

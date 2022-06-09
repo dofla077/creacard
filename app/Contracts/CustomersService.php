@@ -9,9 +9,8 @@ interface CustomersService
     /**
      * Get customers
      *
-     * @return Collection|array
      */
-    public function getCustomers(): Collection|array;
+    public function getCustomers();
 
     /**
      * Create customer

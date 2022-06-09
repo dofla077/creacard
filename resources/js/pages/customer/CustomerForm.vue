@@ -42,7 +42,7 @@
 </template>
 <script>
 export default {
-  name: 'CreateCustomer',
+  name: 'CustomerForm',
   props: {
     submitAction:{
       type: String,
@@ -66,9 +66,15 @@ export default {
 
   }),
   methods: {
+    clearErrorMessages() {
+      this.errorMessages = []
+      this.alertMessage = false
+    },
     save() {
+      this.clearErrorMessages()
       let redirectUrl = this.redirectUrl
       let routeAction = this.submitAction
+
 
       this.$axios.post(route(routeAction), this.form)
         .then(response => {

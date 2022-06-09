@@ -5101,17 +5101,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
     columns: {
@@ -5173,10 +5162,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/customer/CreateCustomer.vue?vue&type=script&lang=js&":
-/*!*************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/customer/CreateCustomer.vue?vue&type=script&lang=js& ***!
-  \*************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/customer/CustomerForm.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/customer/CustomerForm.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -5227,7 +5216,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: 'CreateCustomer',
+  name: 'CustomerForm',
   props: {
     submitAction: {
       type: String,
@@ -5252,12 +5241,145 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    clearErrorMessages: function clearErrorMessages() {
+      this.errorMessages = [];
+      this.alertMessage = false;
+    },
     save: function save() {
       var _this = this;
 
+      this.clearErrorMessages();
       var redirectUrl = this.redirectUrl;
       var routeAction = this.submitAction;
       this.$axios.post(route(routeAction), this.form).then(function (response) {
+        if (response.data) {
+          window.location = route(redirectUrl);
+        }
+      })["catch"](function (error) {
+        _this.errorMessages = error.response.data.errors;
+        _this.alertMessage = true;
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/quotation/QuotationForm.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/quotation/QuotationForm.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'QuotationForm',
+  props: {
+    customers: {
+      type: Array,
+      "default": null
+    },
+    quotation: {
+      type: Object,
+      "default": null
+    },
+    submitAction: {
+      type: String,
+      "default": null
+    },
+    update: {
+      type: String,
+      "default": null
+    },
+    redirectUrl: {
+      type: String,
+      "default": null
+    }
+  },
+  data: function data() {
+    return {
+      form: {
+        customer_id: '',
+        label: '',
+        price: '',
+        description: ''
+      },
+      errorMessages: [],
+      alertMessage: false
+    };
+  },
+  mounted: function mounted() {
+    this.quotationPopulate();
+  },
+  methods: {
+    quotationPopulate: function quotationPopulate() {
+      this.form = {
+        id: this.quotation ? this.quotation.id : '',
+        customer_id: this.quotation ? this.quotation.customer_id : '',
+        label: this.quotation ? this.quotation.label : '',
+        price: this.quotation ? this.quotation.price : '',
+        description: this.quotation ? this.quotation.description : ''
+      };
+    },
+    clearErrorMessages: function clearErrorMessages() {
+      this.errorMessages = [];
+      this.alertMessage = false;
+    },
+    getAction: function getAction() {
+      return this.update ? 'put' : 'post';
+    },
+    getRouteAction: function getRouteAction() {
+      return this.update ? route(this.submitAction, this.form.id) : route(this.submitAction);
+    },
+    save: function save() {
+      var _this = this;
+
+      this.clearErrorMessages();
+      var redirectUrl = this.redirectUrl;
+      var routeAction = this.getRouteAction();
+      var action = this.getAction();
+      this.$axios[action](routeAction, this.form).then(function (response) {
         if (response.data) {
           window.location = route(redirectUrl);
         }
@@ -5372,17 +5494,20 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
 /* harmony import */ var _pages_App__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./pages/App */ "./resources/js/pages/App.vue");
 /* harmony import */ var _components_Index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/Index */ "./resources/js/components/Index.vue");
-/* harmony import */ var _pages_customer_CreateCustomer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pages/customer/CreateCustomer */ "./resources/js/pages/customer/CreateCustomer.vue");
+/* harmony import */ var _pages_customer_CustomerForm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pages/customer/CustomerForm */ "./resources/js/pages/customer/CustomerForm.vue");
+/* harmony import */ var _pages_quotation_QuotationForm__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pages/quotation/QuotationForm */ "./resources/js/pages/quotation/QuotationForm.vue");
 
 
 
 
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].component('AppIndex', _pages_App__WEBPACK_IMPORTED_MODULE_0__["default"]);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].component('Index', _components_Index__WEBPACK_IMPORTED_MODULE_1__["default"]);
-vue__WEBPACK_IMPORTED_MODULE_3__["default"].component('CreateCustomer', _pages_customer_CreateCustomer__WEBPACK_IMPORTED_MODULE_2__["default"]);
+
+vue__WEBPACK_IMPORTED_MODULE_4__["default"].component('AppIndex', _pages_App__WEBPACK_IMPORTED_MODULE_0__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_4__["default"].component('Index', _components_Index__WEBPACK_IMPORTED_MODULE_1__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_4__["default"].component('CustomerForm', _pages_customer_CustomerForm__WEBPACK_IMPORTED_MODULE_2__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_4__["default"].component('QuotationForm', _pages_quotation_QuotationForm__WEBPACK_IMPORTED_MODULE_3__["default"]);
 
 /***/ }),
 
@@ -43753,10 +43878,10 @@ component.options.__file = "resources/js/pages/App.vue"
 
 /***/ }),
 
-/***/ "./resources/js/pages/customer/CreateCustomer.vue":
-/*!********************************************************!*\
-  !*** ./resources/js/pages/customer/CreateCustomer.vue ***!
-  \********************************************************/
+/***/ "./resources/js/pages/customer/CustomerForm.vue":
+/*!******************************************************!*\
+  !*** ./resources/js/pages/customer/CustomerForm.vue ***!
+  \******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -43764,8 +43889,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _CreateCustomer_vue_vue_type_template_id_0e65e492_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CreateCustomer.vue?vue&type=template&id=0e65e492&scoped=true& */ "./resources/js/pages/customer/CreateCustomer.vue?vue&type=template&id=0e65e492&scoped=true&");
-/* harmony import */ var _CreateCustomer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CreateCustomer.vue?vue&type=script&lang=js& */ "./resources/js/pages/customer/CreateCustomer.vue?vue&type=script&lang=js&");
+/* harmony import */ var _CustomerForm_vue_vue_type_template_id_c4f24d4c_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CustomerForm.vue?vue&type=template&id=c4f24d4c&scoped=true& */ "./resources/js/pages/customer/CustomerForm.vue?vue&type=template&id=c4f24d4c&scoped=true&");
+/* harmony import */ var _CustomerForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CustomerForm.vue?vue&type=script&lang=js& */ "./resources/js/pages/customer/CustomerForm.vue?vue&type=script&lang=js&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -43775,19 +43900,58 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 ;
 var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _CreateCustomer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _CreateCustomer_vue_vue_type_template_id_0e65e492_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
-  _CreateCustomer_vue_vue_type_template_id_0e65e492_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  _CustomerForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CustomerForm_vue_vue_type_template_id_c4f24d4c_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
+  _CustomerForm_vue_vue_type_template_id_c4f24d4c_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
   false,
   null,
-  "0e65e492",
+  "c4f24d4c",
   null
   
 )
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/pages/customer/CreateCustomer.vue"
+component.options.__file = "resources/js/pages/customer/CustomerForm.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/pages/quotation/QuotationForm.vue":
+/*!********************************************************!*\
+  !*** ./resources/js/pages/quotation/QuotationForm.vue ***!
+  \********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _QuotationForm_vue_vue_type_template_id_6f64b934_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./QuotationForm.vue?vue&type=template&id=6f64b934&scoped=true& */ "./resources/js/pages/quotation/QuotationForm.vue?vue&type=template&id=6f64b934&scoped=true&");
+/* harmony import */ var _QuotationForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./QuotationForm.vue?vue&type=script&lang=js& */ "./resources/js/pages/quotation/QuotationForm.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _QuotationForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _QuotationForm_vue_vue_type_template_id_6f64b934_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
+  _QuotationForm_vue_vue_type_template_id_6f64b934_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  "6f64b934",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/pages/quotation/QuotationForm.vue"
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
 
 /***/ }),
@@ -43824,9 +43988,25 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/pages/customer/CreateCustomer.vue?vue&type=script&lang=js&":
+/***/ "./resources/js/pages/customer/CustomerForm.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/pages/customer/CustomerForm.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CustomerForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./CustomerForm.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/customer/CustomerForm.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CustomerForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/pages/quotation/QuotationForm.vue?vue&type=script&lang=js&":
 /*!*********************************************************************************!*\
-  !*** ./resources/js/pages/customer/CreateCustomer.vue?vue&type=script&lang=js& ***!
+  !*** ./resources/js/pages/quotation/QuotationForm.vue?vue&type=script&lang=js& ***!
   \*********************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -43835,8 +44015,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateCustomer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./CreateCustomer.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/customer/CreateCustomer.vue?vue&type=script&lang=js&");
- /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateCustomer_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_QuotationForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./QuotationForm.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/quotation/QuotationForm.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_QuotationForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
@@ -43874,19 +44054,36 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/pages/customer/CreateCustomer.vue?vue&type=template&id=0e65e492&scoped=true&":
+/***/ "./resources/js/pages/customer/CustomerForm.vue?vue&type=template&id=c4f24d4c&scoped=true&":
+/*!*************************************************************************************************!*\
+  !*** ./resources/js/pages/customer/CustomerForm.vue?vue&type=template&id=c4f24d4c&scoped=true& ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CustomerForm_vue_vue_type_template_id_c4f24d4c_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CustomerForm_vue_vue_type_template_id_c4f24d4c_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CustomerForm_vue_vue_type_template_id_c4f24d4c_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./CustomerForm.vue?vue&type=template&id=c4f24d4c&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/customer/CustomerForm.vue?vue&type=template&id=c4f24d4c&scoped=true&");
+
+
+/***/ }),
+
+/***/ "./resources/js/pages/quotation/QuotationForm.vue?vue&type=template&id=6f64b934&scoped=true&":
 /*!***************************************************************************************************!*\
-  !*** ./resources/js/pages/customer/CreateCustomer.vue?vue&type=template&id=0e65e492&scoped=true& ***!
+  !*** ./resources/js/pages/quotation/QuotationForm.vue?vue&type=template&id=6f64b934&scoped=true& ***!
   \***************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateCustomer_vue_vue_type_template_id_0e65e492_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateCustomer_vue_vue_type_template_id_0e65e492_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QuotationForm_vue_vue_type_template_id_6f64b934_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QuotationForm_vue_vue_type_template_id_6f64b934_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateCustomer_vue_vue_type_template_id_0e65e492_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./CreateCustomer.vue?vue&type=template&id=0e65e492&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/customer/CreateCustomer.vue?vue&type=template&id=0e65e492&scoped=true&");
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_QuotationForm_vue_vue_type_template_id_6f64b934_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./QuotationForm.vue?vue&type=template&id=6f64b934&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/quotation/QuotationForm.vue?vue&type=template&id=6f64b934&scoped=true&");
 
 
 /***/ }),
@@ -43915,20 +44112,6 @@ var render = function () {
         { attrs: { grouped: "", "group-multiline": "" } },
         [
           _c("b-button", {
-            attrs: {
-              label: "Clear selected",
-              type: "is-danger",
-              "icon-left": "close",
-              disabled: !_vm.selected,
-            },
-            on: {
-              click: function ($event) {
-                _vm.selected = null
-              },
-            },
-          }),
-          _vm._v(" "),
-          _c("b-button", {
             attrs: { label: "Add customer", type: "is-info" },
             on: { click: _vm.addCustomerLink },
           }),
@@ -43937,32 +44120,26 @@ var render = function () {
       ),
       _vm._v(" "),
       _c(
-        "b-tabs",
+        "b-table",
+        { ref: "table", attrs: { data: _vm.items, columns: _vm.columns } },
         [
-          _c(
-            "b-tab-item",
-            { attrs: { label: "Table" } },
-            [
-              _c("b-table", {
-                attrs: {
-                  data: _vm.items,
-                  columns: _vm.columns,
-                  selected: _vm.selected,
-                  focusable: "",
+          _c("b-table-column", {
+            attrs: { field: "label", label: "Label", centered: "" },
+            scopedSlots: _vm._u([
+              {
+                key: "default",
+                fn: function (props) {
+                  return [
+                    _c("span", { staticClass: "tag is-success" }, [
+                      _vm._v(
+                        "\n        " + _vm._s(props.row.label) + " toot\n      "
+                      ),
+                    ]),
+                  ]
                 },
-                on: {
-                  "update:selected": function ($event) {
-                    _vm.selected = $event
-                  },
-                },
-              }),
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c("b-tab-item", { attrs: { label: "Selected" } }, [
-            _c("pre", [_vm._v(_vm._s(_vm.selected))]),
-          ]),
+              },
+            ]),
+          }),
         ],
         1
       ),
@@ -44025,10 +44202,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/customer/CreateCustomer.vue?vue&type=template&id=0e65e492&scoped=true&":
-/*!******************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/customer/CreateCustomer.vue?vue&type=template&id=0e65e492&scoped=true& ***!
-  \******************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/customer/CustomerForm.vue?vue&type=template&id=c4f24d4c&scoped=true&":
+/*!****************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/customer/CustomerForm.vue?vue&type=template&id=c4f24d4c&scoped=true& ***!
+  \****************************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -44140,6 +44317,152 @@ var render = function () {
                 _vm.$set(_vm.form, "address", $$v)
               },
               expression: "form.address",
+            },
+          }),
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("b-field", [
+        _c(
+          "p",
+          { staticClass: "control" },
+          [
+            _c("b-button", {
+              attrs: { label: "Send message", type: "is-primary" },
+              on: { click: _vm.save },
+            }),
+          ],
+          1
+        ),
+      ]),
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/quotation/QuotationForm.vue?vue&type=template&id=6f64b934&scoped=true&":
+/*!******************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/quotation/QuotationForm.vue?vue&type=template&id=6f64b934&scoped=true& ***!
+  \******************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function () {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "section",
+    [
+      _vm.alertMessage
+        ? _c("div", { staticClass: "notification is-danger" }, [
+            _c(
+              "ul",
+              _vm._l(_vm.errorMessages, function (errorMsg, key) {
+                return _c("li", { key: key }, [
+                  _vm._v("\n        " + _vm._s(errorMsg[0]) + "\n      "),
+                ])
+              }),
+              0
+            ),
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _c(
+        "b-field",
+        { attrs: { label: "Label" } },
+        [
+          _c("b-input", {
+            model: {
+              value: _vm.form.label,
+              callback: function ($$v) {
+                _vm.$set(_vm.form, "label", $$v)
+              },
+              expression: "form.label",
+            },
+          }),
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "b-field",
+        { attrs: { label: "Customer" } },
+        [
+          _c(
+            "b-select",
+            {
+              attrs: { placeholder: "Select Customer", expanded: "" },
+              model: {
+                value: _vm.form.customer_id,
+                callback: function ($$v) {
+                  _vm.$set(_vm.form, "customer_id", $$v)
+                },
+                expression: "form.customer_id",
+              },
+            },
+            _vm._l(_vm.customers, function (customer) {
+              return _c(
+                "option",
+                { key: customer.id, domProps: { value: customer.id } },
+                [
+                  _vm._v(
+                    "\n        " +
+                      _vm._s(customer.firstname) +
+                      " " +
+                      _vm._s(customer.lastname) +
+                      "\n      "
+                  ),
+                ]
+              )
+            }),
+            0
+          ),
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "b-field",
+        { attrs: { label: "Price" } },
+        [
+          _c("b-input", {
+            model: {
+              value: _vm.form.price,
+              callback: function ($$v) {
+                _vm.$set(_vm.form, "price", $$v)
+              },
+              expression: "form.price",
+            },
+          }),
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "b-field",
+        { attrs: { label: "Description", horizontal: "" } },
+        [
+          _c("b-input", {
+            attrs: { maxlength: "200", type: "textarea" },
+            model: {
+              value: _vm.form.description,
+              callback: function ($$v) {
+                _vm.$set(_vm.form, "description", $$v)
+              },
+              expression: "form.description",
             },
           }),
         ],

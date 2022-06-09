@@ -3,44 +3,49 @@
 namespace App\Services;
 
 use App\Contracts\QuotationsService;
+use App\Models\Customer;
 use App\Models\Quotation;
-use Illuminate\Database\Eloquent\Collection;
 
 class QuotationService implements QuotationsService
 {
     // quotation columns
     const COLUMNS = [
         ['label' => 'Number quotation', 'field' => 'number'],
-        ['label' => 'Label', 'field' => 'label'],
-        ['label' => 'State', 'field' => 'state'],
+        // ['label' => 'Label', 'field' => 'label'],
         ['label' => 'Price', 'field' => 'price'],
-        ['label' => 'Description', 'field' => 'description'],
         ['label' => 'Customer', 'field' => 'customer'],
+        ['label' => 'State', 'field' => 'state'],
+        ['label' => 'Description', 'field' => 'description'],
         ['label' => 'Updated_at', 'field' => 'updated_at'],
+        ['label' => 'Actions', 'field' => 'actions'],
     ];
 
 
     /**
      *  Get customers
      *
-     * @return Collection|array
      */
-    public function getQuotations(): Collection|array
+    public function getQuotations(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        $customers = Quotation::with('customer')->get(['id', 'number', 'label', 'state', 'price', 'description', 'updated_at']);
+        return Quotation::with('customer')->orderByDesc('id')->paginate();
+    }
 
-        return [$customers->map(fn($item) => [
-            'id' => $item->id,
-            'number' => $item->number,
-            'label' => $item->label,
-            'state' => $item->state,
-            'price' => $item->price . '€',
-            'description' => $item->description,
-            'customer' => $item->customer ? $item->customer->firsname . ' ' . $item->customer->lastname : 'n/a',
-            'updated_at' => $item->updated_at->format('Y-m-d'),
-        ]),
-            collect(static::COLUMNS),
-        ];
+    /**
+     * Get columns
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getColumns()
+    {
+        return collect(static::COLUMNS);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComponents(): mixed
+    {
+        return Customer::get(['id', 'firstname', 'lastname']);
     }
 
     /**
@@ -51,4 +56,26 @@ class QuotationService implements QuotationsService
     {
         return Quotation::create($data);
     }
+
+    /**
+     * Update quotation
+     *
+     * @param Quotation $quotation
+     * @param array $data
+     * @return bool
+     */
+    public function save(Quotation $quotation, array $data): bool
+    {
+        return $quotation->update($data);
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    public function delete(Quotation $quotation): ?bool
+    {
+        return $quotation->deleteOrFail();
+    }
+
+
 }

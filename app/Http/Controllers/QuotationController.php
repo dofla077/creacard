@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\QuotationsService;
-use Illuminate\Http\Request;
+use App\Enums\QuotationState;
+use App\Http\Requests\Quotation\PostQuotationRequest;
+use App\Http\Requests\Quotation\PutQuotationRequest;
+use App\Models\Quotation;
+use Illuminate\Http\Response;
 
 class QuotationController extends Controller
 {
@@ -24,74 +28,73 @@ class QuotationController extends Controller
      */
     public function index()
     {
-        list($quotations, $columns) = $this->quotationService->getQuotations();
+        $quotations = $this->quotationService->getQuotations();
+        $columns = $this->quotationService->getColumns();
+        $states = QuotationState::cases();
 
-        return view('quotation.index', compact('quotations', 'columns'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return view('quotation.index', compact('quotations', 'columns', 'states'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @return Response
      */
-    public function store(Request $request)
+    public function store(PostQuotationRequest $request)
     {
-        //
+        return $this->quotationService->create($request->validated());
     }
 
     /**
-     * Display the specified resource.
+     * Show the form for creating a new resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function show($id)
+    public function create()
     {
-        //
+        $customers = $this->quotationService->getComponents();
+
+        return view('quotation.create', compact('customers'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function edit($id)
+    public function edit(Quotation $quotation)
     {
-        //
+        $customers = $this->quotationService->getComponents();
+
+        return view('quotation.edit', compact('quotation', 'customers'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param PutQuotationRequest $request
+     * @param Quotation $quotation
+     * @return bool
      */
-    public function update(Request $request, $id)
+    public function update(PutQuotationRequest $request, Quotation $quotation)
     {
-        //
+        return $this->quotationService->save($quotation, $request->except('id'));
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Quotation $quotation
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Throwable
      */
-    public function destroy($id)
+    public function destroy(Quotation $quotation)
     {
-        //
+        $this->quotationService->delete($quotation);
+
+        return redirect()->back();
+
     }
 }
