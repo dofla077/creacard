@@ -10,6 +10,8 @@ class Invoice extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $fillable = ['quotation_id'];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

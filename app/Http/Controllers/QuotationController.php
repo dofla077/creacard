@@ -7,6 +7,8 @@ use App\Enums\QuotationState;
 use App\Http\Requests\Quotation\PostQuotationRequest;
 use App\Http\Requests\Quotation\PutQuotationRequest;
 use App\Models\Quotation;
+use App\Services\CustomerService;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class QuotationController extends Controller
@@ -38,7 +40,7 @@ class QuotationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return Response
      */
     public function store(PostQuotationRequest $request)
@@ -51,9 +53,9 @@ class QuotationController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function create()
+    public function create(CustomerService $customerService)
     {
-        $customers = $this->quotationService->getComponents();
+        $customers = $customerService->getCustomers(false);
 
         return view('quotation.create', compact('customers'));
     }
@@ -61,12 +63,13 @@ class QuotationController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
+     * @param Quotation $quotation
+     * @param CustomerService $customerService
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function edit(Quotation $quotation)
+    public function edit(Quotation $quotation, CustomerService $customerService)
     {
-        $customers = $this->quotationService->getComponents();
+        $customers = $customerService->getCustomers(false);
 
         return view('quotation.edit', compact('quotation', 'customers'));
     }
@@ -95,6 +98,19 @@ class QuotationController extends Controller
         $this->quotationService->delete($quotation);
 
         return redirect()->back();
+    }
 
+    public function send(Quotation $quotation)
+    {
+        $this->quotationService->sendNotification($quotation->load('customer'));
+
+        return redirect()->back();
+    }
+
+    public function return(Quotation $quotation, QuotationState $state)
+    {
+        $this->quotationService->returnState($quotation->load('customer.user'), $state);
+
+        return view('quotation.return');
     }
 }

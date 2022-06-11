@@ -8,7 +8,7 @@ use Faker\Factory;
 class QuotationObserver
 {
     /**
-     * Handle the Quotation "created" event.
+     * Handle the Quotation "creating" event.
      *
      * @param Quotation $quotation
      * @return void

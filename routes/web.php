@@ -31,9 +31,9 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     });
 
     Route::resource('quotations', QuotationController::class)->except(['show']);
+    Route::post('/quotations/send/{quotation}', [QuotationController::class, 'send'])->name('quotations.send');
+    Route::get('/quotations/return/{quotation}/{state}', [QuotationController::class, 'return'])->name('quotations.return');
 
 });
-
-
 
 require __DIR__ . '/auth.php';

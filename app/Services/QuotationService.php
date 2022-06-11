@@ -3,15 +3,18 @@
 namespace App\Services;
 
 use App\Contracts\QuotationsService;
+use App\Enums\QuotationState;
+use App\Events\QuotationAcceptEvent;
+use App\Events\QuotationProcessedEvent;
+use App\Events\QuotationReturnEvent;
 use App\Models\Customer;
 use App\Models\Quotation;
 
-class QuotationService implements QuotationsService
+class QuotationService extends BaseService implements QuotationsService
 {
     // quotation columns
     const COLUMNS = [
         ['label' => 'Number quotation', 'field' => 'number'],
-        // ['label' => 'Label', 'field' => 'label'],
         ['label' => 'Price', 'field' => 'price'],
         ['label' => 'Customer', 'field' => 'customer'],
         ['label' => 'State', 'field' => 'state'],
@@ -27,7 +30,7 @@ class QuotationService implements QuotationsService
      */
     public function getQuotations(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        return Quotation::with('customer')->orderByDesc('id')->paginate();
+        return Quotation::with('customer')->orderByDesc(static::UPDATED_AT)->paginate();
     }
 
     /**
@@ -35,17 +38,9 @@ class QuotationService implements QuotationsService
      *
      * @return \Illuminate\Support\Collection
      */
-    public function getColumns()
+    public function getColumns(): \Illuminate\Support\Collection
     {
         return collect(static::COLUMNS);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getComponents(): mixed
-    {
-        return Customer::get(['id', 'firstname', 'lastname']);
     }
 
     /**
@@ -75,6 +70,24 @@ class QuotationService implements QuotationsService
     public function delete(Quotation $quotation): ?bool
     {
         return $quotation->deleteOrFail();
+    }
+
+    public function sendNotification(Quotation $quotation)
+    {
+        QuotationProcessedEvent::dispatch($quotation);
+    }
+
+    public function returnState(Quotation $quotation, QuotationState $state)
+    {
+        $quotation->state = $state->value;
+        $quotation->save();
+
+        QuotationReturnEvent::dispatch($quotation, $state);
+
+        if ($quotation->isAccept()) {
+            (new InvoiceService)->create($quotation->id);
+            QuotationAcceptEvent::dispatch($quotation->load('invoice'));
+        }
     }
 
 

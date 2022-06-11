@@ -8,11 +8,10 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
-class CustomerService implements CustomersService
+class CustomerService extends BaseService implements CustomersService
 {
     // customer columns
     const COLUMNS = [
-        //['field' => 'id', 'label' => 'ID', 'width' => 40, 'numeric' => true],
         ['label' => 'Firstname', 'field' => 'firstname'],
         ['label' => 'Lastname', 'field' => 'lastname'],
         ['label' => 'Email', 'field' => 'email'],
@@ -27,9 +26,11 @@ class CustomerService implements CustomersService
      *  Get customers
      *
      */
-    public function getCustomers()
+    public function getCustomers(bool $paginate = true)
     {
-        return Customer::withCount('quotations')->paginate();
+        $customer = Customer::withCount('quotations')->orderByDesc(static::UPDATED_AT);
+
+        return $paginate ? $customer->paginate() : $customer->get();
     }
 
     /**

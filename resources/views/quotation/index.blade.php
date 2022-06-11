@@ -50,7 +50,14 @@
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                     <a href="{{ route('quotations.edit', $quotation) }}" class="text-indigo-600 hover:text-indigo-900 mr-2">Edit</a>
-                                                    <a href="#" class="text-green-600 hover:text-indigo-900 mr-2">Send</a>
+                                                    @if($quotation->customer && ($quotation->state !== \App\Enums\QuotationState::Accept
+                                                            && $quotation->state !== \App\Enums\QuotationState::Reject
+                                                        && $quotation->state !== \App\Enums\QuotationState::Pending))
+                                                        <form action="{{ route('quotations.send', $quotation) }}" method="POST" style="display: inline-block">
+                                                            @csrf
+                                                            <button type="submit" class="text-green-600 hover:text-indigo-900 mr-2">Send</button>
+                                                        </form>
+                                                    @endif
                                                     <form action="{{ route('quotations.destroy', $quotation) }}" method="POST" style="display: inline-block">
                                                         @csrf
                                                         @method('DELETE')
