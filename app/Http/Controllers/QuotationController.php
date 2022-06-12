@@ -8,11 +8,13 @@ use App\Http\Requests\Quotation\PostQuotationRequest;
 use App\Http\Requests\Quotation\PutQuotationRequest;
 use App\Models\Quotation;
 use App\Services\CustomerService;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class QuotationController extends Controller
 {
+    /**
+     * @var QuotationsService
+     */
     protected QuotationsService $quotationService;
 
     /**
@@ -30,17 +32,15 @@ class QuotationController extends Controller
      */
     public function index()
     {
-        $quotations = $this->quotationService->getQuotations();
-        $columns = $this->quotationService->getColumns();
-        $states = QuotationState::cases();
+        list($quotations, $columns, $states, $na) = $this->quotationService->getIndexData();
 
-        return view('quotation.index', compact('quotations', 'columns', 'states'));
+        return view('quotation.index', compact('quotations', 'columns', 'states', 'na'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param PostQuotationRequest $request
      * @return Response
      */
     public function store(PostQuotationRequest $request)
@@ -51,6 +51,7 @@ class QuotationController extends Controller
     /**
      * Show the form for creating a new resource.
      *
+     * @param CustomerService $customerService
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function create(CustomerService $customerService)
@@ -100,6 +101,12 @@ class QuotationController extends Controller
         return redirect()->back();
     }
 
+    /**
+     * Send
+     *
+     * @param Quotation $quotation
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function send(Quotation $quotation)
     {
         $this->quotationService->sendNotification($quotation->load('customer'));
@@ -107,10 +114,17 @@ class QuotationController extends Controller
         return redirect()->back();
     }
 
-    public function return(Quotation $quotation, QuotationState $state)
+    /**
+     * Customer choice
+     *
+     * @param Quotation $quotation
+     * @param QuotationState $state
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function customerChoice(Quotation $quotation, QuotationState $state)
     {
-        $this->quotationService->returnState($quotation->load('customer.user'), $state);
+        $choice = $this->quotationService->customerChoice($quotation->load('customer.user'), $state);
 
-        return view('quotation.return');
+        return view('quotation.return', ['answer' => $choice]);
     }
 }

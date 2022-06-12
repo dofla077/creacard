@@ -7,7 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class InvoiceSend extends Notification
+class InvoiceSendNotification extends Notification
 {
     use Queueable;
 
@@ -25,7 +25,7 @@ class InvoiceSend extends Notification
      */
     public function __construct(Invoice $invoice)
     {
-        $this->invoice = $invoice;
+        $this->invoice = $invoice->load('quotation.customer.user');
     }
 
     /**
@@ -49,21 +49,11 @@ class InvoiceSend extends Notification
     {
         return (new MailMessage)
             ->subject('Invoice number: ' . $this->invoice->number)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
-    }
-
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param mixed $notifiable
-     * @return array
-     */
-    public function toArray($notifiable)
-    {
-        return [
-            //
-        ];
+            ->markdown('mail.invoice', [
+                'seller' => $this->invoice->quotation->customer->user,
+                'customer' => $this->invoice->quotation->customer,
+                'quotation' => $this->invoice->quotation,
+                'invoice' => $this->invoice,
+            ]);
     }
 }

@@ -37,10 +37,18 @@
                                                     <div class="text-left font-medium text-green-500">{{ $quotation->price }} €</div>
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {{ $quotation->customer ? $quotation->customer->firstname . ' ' . $quotation->customer->lastname : 'N/A' }}
+                                                    {{ $quotation->customer ? $quotation->customer->name : $na }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    <span class="bg-red-400 text-gray-50 rounded-md px-2">{{ $quotation->state->value }} </span>
+                                                    @if($quotation->isAccept())
+                                                        <span class="bg-green-400 text-gray-50 px-2">{{ str($quotation->state->value)->upper()}}</span>
+                                                    @elseif($quotation->isReject())
+                                                        <span class="bg-red-400 text-gray-50 px-2">{{ str($quotation->state->value)->upper() }}</span>
+                                                     @elseif($quotation->isPending())
+                                                        <span class="bg-orange-300 text-gray-50 px-2">{{ str($quotation->state->value)->upper() }}</span>
+                                                    @else
+                                                        <span class="bg-zinc-400 text-grey-50 px-2">{{ str($quotation->state->value)->upper() }}</span>
+                                                    @endif
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                     {{ str($quotation->description)->words(3) }}
@@ -50,19 +58,17 @@
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                     <a href="{{ route('quotations.edit', $quotation) }}" class="text-indigo-600 hover:text-indigo-900 mr-2">Edit</a>
-                                                    @if($quotation->customer && ($quotation->state !== \App\Enums\QuotationState::Accept
-                                                            && $quotation->state !== \App\Enums\QuotationState::Reject
-                                                        && $quotation->state !== \App\Enums\QuotationState::Pending))
-                                                        <form action="{{ route('quotations.send', $quotation) }}" method="POST" style="display: inline-block">
-                                                            @csrf
-                                                            <button type="submit" class="text-green-600 hover:text-indigo-900 mr-2">Send</button>
-                                                        </form>
-                                                    @endif
-                                                    <form action="{{ route('quotations.destroy', $quotation) }}" method="POST" style="display: inline-block">
+                                                @if($quotation->customer && $quotation->isNotDefined())
+                                                    <form action="{{ route('quotations.send', $quotation) }}" method="POST" style="display: inline-block">
                                                         @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="text-red-600 hover:text-indigo-900 mr-2">Delete</button>
+                                                        <button type="submit" class="text-green-600 hover:text-indigo-900 mr-2">Send</button>
                                                     </form>
+                                                @endif
+                                                <form action="{{ route('quotations.destroy', $quotation) }}" method="POST" style="display: inline-block">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-600 hover:text-indigo-900 mr-2">Delete</button>
+                                                </form>
                                                 </td>
                                             </tr>
                                         @endforeach

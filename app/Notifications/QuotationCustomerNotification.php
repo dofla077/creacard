@@ -13,6 +13,9 @@ class QuotationCustomerNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    const SUBJECT = 'Quotation number';
+    const INTRO = 'You can found on this mail your quotation';
+
     protected Quotation $quotation;
 
     /**
@@ -45,19 +48,26 @@ class QuotationCustomerNotification extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('Quotation number: ' . $this->quotation->number)
-            ->line('The introduction to the notification.')
+            ->subject(static::SUBJECT . ': ' . $this->quotation->number)
             ->markdown('mail.quotation', [
+                'seller' => $this->quotation->customer->user,
+                'customer' => $this->quotation->customer,
+                'quotation' => $this->quotation,
+                'description' => $this->quotation->description,
+                'intro' => static::INTRO,
                 QuotationState::Accept->value => [
-                    'url' => url(route('quotations.return', [$this->quotation, QuotationState::Accept->value])),
+                    'url' => url(
+                        route('quotations.customer.choice', [$this->quotation, QuotationState::Accept->value])
+                    ),
                     'value' => QuotationState::Accept->value
                 ],
                 QuotationState::Reject->value => [
-                    'url' => url(route('quotations.return', [$this->quotation, QuotationState::Reject->value])),
+                    'url' => url(
+                        route('quotations.customer.choice', [$this->quotation, QuotationState::Reject->value])
+                    ),
                     'value' => QuotationState::Reject->value
                 ],
-            ])
-            ->line('Thank you for using our application!');
+            ]);
     }
 
     /**
@@ -67,8 +77,16 @@ class QuotationCustomerNotification extends Notification implements ShouldQueue
      * @param string $channel
      * @return bool
      */
-    public function shouldSend($notifiable, $channel)
+    public function shouldSend($notifiable, $channel): bool
     {
-        return $this->quotation->isSend();
+        $isSend = $this->quotation->isPending();
+        if ($isSend && !$this->quotation->sended_at) {
+            $this->quotation->sended_at = now();
+            $this->quotation->save();
+
+            return true;
+        }
+
+        return false;
     }
 }

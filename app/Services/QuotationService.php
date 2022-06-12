@@ -7,7 +7,6 @@ use App\Enums\QuotationState;
 use App\Events\QuotationAcceptEvent;
 use App\Events\QuotationProcessedEvent;
 use App\Events\QuotationReturnEvent;
-use App\Models\Customer;
 use App\Models\Quotation;
 
 class QuotationService extends BaseService implements QuotationsService
@@ -23,10 +22,28 @@ class QuotationService extends BaseService implements QuotationsService
         ['label' => 'Actions', 'field' => 'actions'],
     ];
 
+    const ANSWER_ALREADY = 'you already answered';
+    const ANSWER_SUCCESS = 'Thanks you for your response !!';
 
     /**
-     *  Get customers
+     * Index data
      *
+     * @return array
+     */
+    public function getIndexData(): array
+    {
+        return [
+            $this->getQuotations(),
+            $this->getColumns(),
+            QuotationState::cases(),
+            $this::NA
+        ];
+    }
+
+    /**
+     * Get customers
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function getQuotations(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
@@ -44,12 +61,46 @@ class QuotationService extends BaseService implements QuotationsService
     }
 
     /**
-     * @param array $data
-     * @return mixed
+     * Delete
+     *
+     * @throws \Throwable
      */
-    public function create(array $data): mixed
+    public function delete(Quotation $quotation): ?bool
     {
-        return Quotation::create($data);
+        return $quotation->deleteOrFail();
+    }
+
+    /**
+     * Send notification
+     *
+     * @param Quotation $quotation
+     * @return void
+     */
+    public function sendNotification(Quotation $quotation): void
+    {
+        QuotationProcessedEvent::dispatch($quotation);
+    }
+
+    /**
+     * Customer choice
+     *
+     * @param Quotation $quotation
+     * @param QuotationState $state
+     * @return string
+     */
+    public function customerChoice(Quotation $quotation, QuotationState $state): string
+    {
+        $quotation->state = $state->value;
+        $quotation->save();
+
+        QuotationReturnEvent::dispatch($quotation, $state);
+
+        if ($quotation->isAccept()) {
+            (new InvoiceService)->create($quotation->id);
+            QuotationAcceptEvent::dispatch($quotation->load('invoice'));
+        }
+
+        return static::ANSWER_SUCCESS;
     }
 
     /**
@@ -65,30 +116,13 @@ class QuotationService extends BaseService implements QuotationsService
     }
 
     /**
-     * @throws \Throwable
+     * Create
+     *
+     * @param array $data
+     * @return mixed
      */
-    public function delete(Quotation $quotation): ?bool
+    public function create(array $data): mixed
     {
-        return $quotation->deleteOrFail();
+        return Quotation::create($data);
     }
-
-    public function sendNotification(Quotation $quotation)
-    {
-        QuotationProcessedEvent::dispatch($quotation);
-    }
-
-    public function returnState(Quotation $quotation, QuotationState $state)
-    {
-        $quotation->state = $state->value;
-        $quotation->save();
-
-        QuotationReturnEvent::dispatch($quotation, $state);
-
-        if ($quotation->isAccept()) {
-            (new InvoiceService)->create($quotation->id);
-            QuotationAcceptEvent::dispatch($quotation->load('invoice'));
-        }
-    }
-
-
 }

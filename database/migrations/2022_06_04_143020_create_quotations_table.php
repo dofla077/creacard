@@ -24,6 +24,7 @@ return new class extends Migration
             $table->float('price');
             $table->text('description');
             $table->timestamps();
+            $table->timestamp('sended_at')->nullable();
             $table->softDeletes();
         });
     }

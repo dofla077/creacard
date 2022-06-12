@@ -20,6 +20,11 @@ class QuotationReturnEvent
      */
     public Quotation $quotation;
 
+    /**
+     * Quotation state
+     *
+     * @var QuotationState
+     */
     public QuotationState $state;
 
     /**
@@ -33,6 +38,11 @@ class QuotationReturnEvent
         $this->state = $state;
     }
 
+    /**
+     * Notify
+     *
+     * @return void
+     */
     public function notify()
     {
         $this->quotation->customer->notify(new UserNotifyNotification($this->quotation, $this->state));

@@ -7,7 +7,13 @@ use App\Models\Invoice;
 class InvoiceService
 {
 
-    public function create($quotation_id)
+    /**
+     * Create
+     *
+     * @param $quotation_id
+     * @return mixed
+     */
+    public function create($quotation_id): mixed
     {
         return Invoice::create(['quotation_id' => $quotation_id]);
     }

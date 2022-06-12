@@ -13,6 +13,8 @@ class UserNotifyNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    const SUBJECT = 'The Response of quotation ';
+
     /**
      * The quotation instance.
      *
@@ -55,23 +57,11 @@ class UserNotifyNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+        $number = $this->quotation->number;
         return (new MailMessage)
-            ->subject('The Response of quotation ' . $this->quotation->number)
-                    ->line('The customer ' . $this->quotation->customer->firname. ' ' . $this->quotation->customer->lastname)
-                    ->line('has response : ' . $this->state->value . ' for the quotation number ' . $this->quotation->number)
+            ->subject(static::SUBJECT . $number)
+                    ->line('The customer ' . $this->quotation->customer->name)
+                    ->line($this->state->value . ' the quotation number ' . $number)
                     ->line('Thank you for using our application!');
-    }
-
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
-    public function toArray($notifiable)
-    {
-        return [
-            //
-        ];
     }
 }

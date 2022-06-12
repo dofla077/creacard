@@ -1,15 +1,22 @@
 @component('mail::message')
-# Introduction
+# Seller : {{ $seller->name }}
+Email : {{ $seller->email }}
 
-The body of your message.
-
-@component('mail::button', ['url' => $reject['url'], 'color' => 'red'])
-    {{ $reject['value'] }}
-@endcomponent
-
+***Invoice send at***: {{ $invoice->sended_at }}
 @component('mail::panel')
-    This is the panel content.
+- Invoice for : {{ $customer->name }}
+- Number : {{ $invoice->number }}
+- Email : {{ $customer->email }}
+- Phone : {{ $customer->phone }}
+- Address : {{ $customer->address }}
 @endcomponent
+
+## Object
+This is your invoice number {{ $invoice->number }} for the quotation number #
+{{ $quotation->number }}.
+
+## Price
+{{ $quotation->price }}€
 
 Thanks,<br>
 {{ config('app.name') }}

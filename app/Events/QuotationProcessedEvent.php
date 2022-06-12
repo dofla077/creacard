@@ -31,11 +31,13 @@ class QuotationProcessedEvent
     }
 
     /**
+     * Processed
+     *
      * @return void
      */
     public function processed(): void
     {
-        $this->quotation->state = QuotationState::Pending->value;
+        $this->quotation->state = QuotationState::Pending;
         $this->quotation->save();
 
         $this->quotation->customer->notify(new QuotationCustomerNotification($this->quotation));

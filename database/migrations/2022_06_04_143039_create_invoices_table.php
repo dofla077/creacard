@@ -18,7 +18,9 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Quotation::class)->constrained()->onDelete('cascade');
             $table->string('number');
+
             $table->timestamps();
+            $table->timestamp('sended_at')->nullable();
             $table->softDeletes();
         });
     }

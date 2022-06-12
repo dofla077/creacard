@@ -10,7 +10,16 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div id="app">
-                        @yield('content')
+                        @if(request()->routeIs('dashboard'))
+                            <p>Welcome to dashboard for application test.</p>
+                            <p>You can access
+                                <a href="{{ route('customers.index') }}">customers</a> page to test
+                                <a href="{{ route('quotations.index') }}">quotations</a> page to test.
+                            </p>
+                            <p>Enjoy :) </p>
+                        @else
+                            @yield('content')
+                        @endif
                     </div>
                 </div>
             </div>

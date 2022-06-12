@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Contracts\CustomersService;
 use App\Models\Customer;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,10 +22,12 @@ class CustomerService extends BaseService implements CustomersService
 
 
     /**
-     *  Get customers
+     * Get customers
      *
+     * @param bool $paginate
+     * @return mixed
      */
-    public function getCustomers(bool $paginate = true)
+    public function getCustomers(bool $paginate = true): mixed
     {
         $customer = Customer::withCount('quotations')->orderByDesc(static::UPDATED_AT);
 
@@ -44,6 +45,8 @@ class CustomerService extends BaseService implements CustomersService
     }
 
     /**
+     * Create
+     *
      * @param array $data
      * @return mixed
      */

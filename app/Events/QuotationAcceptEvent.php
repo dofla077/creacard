@@ -3,7 +3,7 @@
 namespace App\Events;
 
 use App\Models\Quotation;
-use App\Notifications\InvoiceSend;
+use App\Notifications\InvoiceSendNotification;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -37,7 +37,7 @@ class QuotationAcceptEvent
      */
     public function sendInvoice(): void
     {
-        $this->quotation->customer->notify(new InvoiceSend($this->quotation->invoice));
+        $this->quotation->customer->notify(new InvoiceSendNotification($this->quotation->invoice));
     }
 
 }

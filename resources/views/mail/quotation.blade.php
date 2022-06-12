@@ -1,7 +1,21 @@
 @component('mail::message')
-# Introduction
+# Seller : {{ $seller->name }}
+Email : {{ $seller->email }}
 
-The body of your message.
+***Quotation send at***: {{ $quotation->sended_at }}
+@component('mail::panel')
+- Quotation for : {{ $customer->name }}
+- Number : {{ $quotation->number }}
+- Email : {{ $customer->email }}
+- Phone : {{ $customer->phone }}
+- Address : {{ $customer->address }}
+@endcomponent
+
+## Description
+{{ $description }}
+
+## Price
+{{ $quotation->price }}€
 
 @component('mail::button', ['url' => $accept['url'], 'color' => 'green'])
 {{ $accept['value'] }}
@@ -9,17 +23,6 @@ The body of your message.
 
 @component('mail::button', ['url' => $reject['url'], 'color' => 'red'])
     {{ $reject['value'] }}
-@endcomponent
-
-@component('mail::panel')
-    This is the panel content.
-@endcomponent
-
-@component('mail::table')
-    | Laravel       | Table         | Example  |
-    | ------------- |:-------------:| --------:|
-    | Col 2 is      | Centered      | $10      |
-    | Col 3 is      | Right-Aligned | $20      |
 @endcomponent
 
 Thanks,<br>

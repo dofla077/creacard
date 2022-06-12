@@ -43,6 +43,8 @@ class User extends Authenticatable
     ];
 
     /**
+     * Customers
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function customers(): \Illuminate\Database\Eloquent\Relations\HasMany
