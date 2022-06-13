@@ -45,6 +45,6 @@ class QuotationReturnEvent
      */
     public function notify()
     {
-        $this->quotation->customer->notify(new UserNotifyNotification($this->quotation, $this->state));
+        $this->quotation->customer->user->notify(new UserNotifyNotification($this->quotation, $this->state));
     }
 }

@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('number');
 
             $table->timestamps();
-            $table->timestamp('sended_at')->nullable();
             $table->softDeletes();
         });
     }

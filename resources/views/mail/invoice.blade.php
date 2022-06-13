@@ -2,7 +2,7 @@
 # Seller : {{ $seller->name }}
 Email : {{ $seller->email }}
 
-***Invoice send at***: {{ $invoice->sended_at }}
+***Invoice send at***: {{ $invoice->updated_at }}
 @component('mail::panel')
 - Invoice for : {{ $customer->name }}
 - Number : {{ $invoice->number }}
@@ -12,8 +12,7 @@ Email : {{ $seller->email }}
 @endcomponent
 
 ## Object
-This is your invoice number {{ $invoice->number }} for the quotation number #
-{{ $quotation->number }}.
+This is your invoice for the quotation number {{ $quotation->number }}.
 
 ## Price
 {{ $quotation->price }}€

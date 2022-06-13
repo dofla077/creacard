@@ -13,10 +13,6 @@ class Invoice extends Model
 
     protected $fillable = ['quotation_id'];
 
-    protected $casts = [
-        'sended_at' => 'datetime:Y-m-d',
-    ];
-
     /**
      * Quotation
      *
