@@ -28,4 +28,6 @@ you can register new login
 
 ## Mail
 
+To send a quotation you must add a customer at this one.
+
 You can access mail on [http://localhost:8025](http://localhost:8025) or change mail config on **.env**
