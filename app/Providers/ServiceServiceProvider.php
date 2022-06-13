@@ -10,21 +10,13 @@ use Illuminate\Support\ServiceProvider;
 
 class ServiceServiceProvider extends ServiceProvider
 {
-    /**
-     * Bind contracts
-     *
-     * @var array|string[]
-     */
-    /*public array $bindings = [
-        CustomersService::class => CustomersService::class
-    ];*/
 
     /**
      * Register any application services.
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->app->bind(CustomersService::class, function () {
             return new CustomerService();

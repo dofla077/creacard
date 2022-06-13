@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Listeners\QuotationEventSubscriber;
+use App\Models\Invoice;
 use App\Models\Quotation;
+use App\Observers\InvoiceObserver;
 use App\Observers\QuotationObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -23,12 +26,22 @@ class EventServiceProvider extends ServiceProvider
     ];
 
     /**
+     * The subscriber classes to register.
+     *
+     * @var array
+     */
+    protected $subscribe = [
+        QuotationEventSubscriber::class,
+    ];
+
+    /**
      * The model observers for your application.
      *
      * @var array
      */
     protected $observers = [
         Quotation::class => [QuotationObserver::class],
+        Invoice::class => [InvoiceObserver::class],
     ];
 
     /**

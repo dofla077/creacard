@@ -19,7 +19,6 @@ class QuotationFactory extends Factory
         return [
             'label' => $this->faker->word(),
             'number' => $this->faker->unique()->numerify('###-###-####'),
-           // 'state' => ,
             'price' => $this->faker->numberBetween(10, 500),
             'description' => $this->faker->sentence(4),
 

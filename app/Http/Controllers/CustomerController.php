@@ -7,6 +7,9 @@ use App\Http\Requests\Customer\PostCustomerRequest;
 
 class CustomerController extends Controller
 {
+    /**
+     * @var CustomersService
+     */
     protected CustomersService $customerService;
 
     /**
@@ -31,6 +34,8 @@ class CustomerController extends Controller
     }
 
     /**
+     * Store
+     *
      * @param PostCustomerRequest $request
      * @return mixed
      */
@@ -39,6 +44,11 @@ class CustomerController extends Controller
         return $this->customerService->create($request->validated());
     }
 
+    /**
+     * Create
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function create()
     {
         return view('customer.create');

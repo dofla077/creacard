@@ -7,10 +7,14 @@ use App\Enums\QuotationState;
 use App\Http\Requests\Quotation\PostQuotationRequest;
 use App\Http\Requests\Quotation\PutQuotationRequest;
 use App\Models\Quotation;
+use App\Services\CustomerService;
 use Illuminate\Http\Response;
 
 class QuotationController extends Controller
 {
+    /**
+     * @var QuotationsService
+     */
     protected QuotationsService $quotationService;
 
     /**
@@ -28,17 +32,15 @@ class QuotationController extends Controller
      */
     public function index()
     {
-        $quotations = $this->quotationService->getQuotations();
-        $columns = $this->quotationService->getColumns();
-        $states = QuotationState::cases();
+        list($quotations, $columns, $states, $na) = $this->quotationService->getIndexData();
 
-        return view('quotation.index', compact('quotations', 'columns', 'states'));
+        return view('quotation.index', compact('quotations', 'columns', 'states', 'na'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param PostQuotationRequest $request
      * @return Response
      */
     public function store(PostQuotationRequest $request)
@@ -49,11 +51,12 @@ class QuotationController extends Controller
     /**
      * Show the form for creating a new resource.
      *
+     * @param CustomerService $customerService
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function create()
+    public function create(CustomerService $customerService)
     {
-        $customers = $this->quotationService->getComponents();
+        $customers = $customerService->getCustomers(false);
 
         return view('quotation.create', compact('customers'));
     }
@@ -61,12 +64,13 @@ class QuotationController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
+     * @param Quotation $quotation
+     * @param CustomerService $customerService
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function edit(Quotation $quotation)
+    public function edit(Quotation $quotation, CustomerService $customerService)
     {
-        $customers = $this->quotationService->getComponents();
+        $customers = $customerService->getCustomers(false);
 
         return view('quotation.edit', compact('quotation', 'customers'));
     }
@@ -95,6 +99,32 @@ class QuotationController extends Controller
         $this->quotationService->delete($quotation);
 
         return redirect()->back();
+    }
 
+    /**
+     * Send
+     *
+     * @param Quotation $quotation
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function send(Quotation $quotation)
+    {
+        $this->quotationService->sendNotification($quotation->load('customer'));
+
+        return redirect()->back();
+    }
+
+    /**
+     * Customer choice
+     *
+     * @param Quotation $quotation
+     * @param QuotationState $state
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function customerChoice(Quotation $quotation, QuotationState $state)
+    {
+        $choice = $this->quotationService->customerChoice($quotation->load('customer.user'), $state);
+
+        return view('quotation.return', ['answer' => $choice]);
     }
 }
