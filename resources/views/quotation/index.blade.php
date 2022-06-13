@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Customers') }}
+            {{ __('Quotations') }}
         </h2>
     </x-slot>
 
@@ -13,7 +13,7 @@
                         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
-                              <a href="{{ route('customers.create') }}" class="button hover:text-indigo-900">Create</a>
+                                <a href="{{ route('quotations.create') }}" class="button hover:text-indigo-900">Add</a>
 
 
                                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -25,53 +25,37 @@
                                                     {{ $column['label'] }}
                                                 </th>
                                             @endforeach
-                                            <!--
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Firstname
-                                            </th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Lastname
-                                            </th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Email
-                                            </th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Phone
-                                            </th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Address
-                                            </th> -->
-                                            <th scope="col" class="relative px-6 py-3">
-                                                <span class="sr-only">Edit</span>
-                                            </th>
                                         </tr>
                                         </thead>
                                         <tbody class="bg-white divide-y divide-gray-200">
-                                        @foreach ($customers as $customer)
+                                        @foreach ($quotations as $quotation)
                                             <tr>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {{ $customer->firstname }}
+                                                    {{ $quotation->number }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {{ $customer->lastname }}
+                                                    <div class="text-left font-medium text-green-500">{{ $quotation->price }} €</div>
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {{ $customer->email }}
+                                                    {{ $quotation->customer ? $quotation->customer->firstname . ' ' . $quotation->customer->lastname : 'N/A' }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {{ $customer->phone }}
+                                                    <span class="bg-red-400 text-gray-50 rounded-md px-2">{{ $quotation->state->value }} </span>
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {{ $customer->address }}
+                                                    {{ str($quotation->description)->words(3) }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {{ $customer->quotations_count }}
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {{ $customer->updated_at }}
+                                                    {{ $quotation->updated_at }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                    <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                                    <a href="{{ route('quotations.edit', $quotation) }}" class="text-indigo-600 hover:text-indigo-900 mr-2">Edit</a>
+                                                    <a href="#" class="text-green-600 hover:text-indigo-900 mr-2">Send</a>
+                                                    <form action="{{ route('quotations.destroy', $quotation) }}" method="POST" style="display: inline-block">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="text-red-600 hover:text-indigo-900 mr-2">Delete</button>
+                                                    </form>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -80,7 +64,7 @@
 
                                 </div>
                                 <div class="mt-4">
-                                    {{ $customers->links() }}
+                                    {{ $quotations->links() }}
                                 </div>
                             </div>
                         </div>

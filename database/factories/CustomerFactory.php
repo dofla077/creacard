@@ -2,10 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\Quotation;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Customer>
@@ -20,7 +18,7 @@ class CustomerFactory extends Factory
     public function definition()
     {
         return [
-          //  'quotation_id' => null,
+            //  'quotation_id' => null,
             'user_id' => User::first()->value('id'),
             'firstname' => $this->faker->firstName,
             'lastname' => $this->faker->lastName,

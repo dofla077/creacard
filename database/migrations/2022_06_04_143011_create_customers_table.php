@@ -18,7 +18,6 @@ return new class extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->onDelete('cascade');
-            $table->foreignIdFor(Quotation::class)->nullable()->constrained()->onDelete('cascade');
             $table->string('firstname');
             $table->string('lastname');
             $table->string('email')->unique();

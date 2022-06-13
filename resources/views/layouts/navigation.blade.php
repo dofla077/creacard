@@ -18,8 +18,14 @@
                 </div>
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('customer.index')" :active="request()->routeIs('customers')">
+                    <x-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.index')">
                         {{ 'Customers' }}
+                    </x-nav-link>
+                </div>
+                <!-- Navigation Links -->
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('quotations.index')" :active="request()->routeIs('quotations.index')">
+                        {{ 'Quotations' }}
                     </x-nav-link>
                 </div>
             </div>

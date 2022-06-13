@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\QuotationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,12 +19,21 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::prefix('customers')->group(function () {
-    Route::get('/', [CustomerController::class, 'index'])->name('customer.index');
+Route::group(['middleware' => ['web', 'auth']], function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->middleware(['auth'])->name('dashboard');
+
+    Route::prefix('customers')->group(function () {
+        Route::get('/', [CustomerController::class, 'index'])->name('customers.index');
+        Route::get('create', [CustomerController::class, 'create'])->name('customers.create');
+        Route::post('store', [CustomerController::class, 'store'])->name('customers.store');
+    });
+
+    Route::resource('quotations', QuotationController::class)->except(['show']);
+
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
 
-require __DIR__.'/auth.php';
+
+require __DIR__ . '/auth.php';
