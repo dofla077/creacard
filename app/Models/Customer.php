@@ -12,7 +12,7 @@ class Customer extends Model
 {
     use HasFactory, SoftDeletes, Notifiable;
 
-    public $fillable = ['firstname', 'lastname', 'email', 'phone', 'address'];
+    public $fillable = ['user_id', 'firstname', 'lastname', 'email', 'phone', 'address'];
 
     /**
      * User
